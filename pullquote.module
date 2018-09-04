@@ -26,46 +26,6 @@ define('PULLQUOTE_VIEW_MODE_LOAD_DEFAULT', 1);
 define('PULLQUOTE_DEFAULT_CSS', 'pullquote_style_1.css');
 
 /**
- * Implements of hook_menu().
- */
-function pullquote_menu() {
-  $items['admin/config/content/pullquote'] = array(
-    'title' => 'Pullquote Global Configuration',
-    'description' => 'Configure Pullquote settings',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('pullquote_admin_settings_form'),
-    'access arguments' => array('administer pullquote settings'),
-    'file' => 'pullquote.admin.inc',
-  );
-  $items['admin/config/content/pullquote-style'] = array(
-    'title' => 'Change Pullquote Styles',
-    'description' => 'Change Pullquote Styles',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('pullquote_admin_styles_form'),
-    'access arguments' => array('change pullquote styles'),
-    'file' => 'pullquote.admin.inc',
-  );
-  return $items;
-}
-
-/**
- * Implements hook_permission().
- *
- * Define Pullquote permissions.
- */
-function pullquote_permission() {
-  $perm = array(
-    'administer pullquote settings' => array(
-      'title' => t('Administer Pullquote Settings'),
-    ),
-    'change pullquote styles' => array(
-      'title' => t('Change Pullquote Styles'),
-    ),
-  );
-  return $perm;
-}
-
-/**
  * Implements hook_page_alter().
  *
  * Includes a CSS and JS file for pullquote on every page load.
