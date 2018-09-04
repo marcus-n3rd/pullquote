@@ -32,15 +32,11 @@ define('PULLQUOTE_DEFAULT_CSS', 'pullquote_style_1.css');
  */
 function pullquote_page_alter(&$page) {
   // If global scope add the css and js on each load.
-  // @FIXME
-// Could not extract the default value because it is either indeterminate, or
-// not scalar. You'll need to provide a default value in
-// config/install/pullquote.settings.yml and config/schema/pullquote.schema.yml.
-if (\Drupal::config('pullquote.settings')->get('pullquote_scope') == 1) {
+  if (\Drupal::config('pullquote.settings')->get('scope') == 1) {
     $path = drupal_get_path('module', 'pullquote');
-    $css_file = \Drupal::config('pullquote.settings')->get('pullquote_css');
+    $css_file = \Drupal::config('pullquote.settings')->get('css');
     if (!$css_file) {
-      $css_file = $path . '/css/pullquote_style_1.css';
+      $css_file = $path . '/css/' . PULLQUOTE_DEFAULT_CSS;
     }
     $page['content']['#attached']['css'][] = $css_file;
     $page['content']['#attached']['js'][] = $path . '/pullquote.js';
@@ -57,7 +53,7 @@ function pullquote_node_view(array &$build, \Drupal\node\NodeInterface $node, $v
     $path = drupal_get_path('module', 'pullquote');
     $css_file = \Drupal::config('pullquote.settings')->get('pullquote_css');
     if (!$css_file) {
-      $css_file = $path . '/css/pullquote_style_1.css';
+      $css_file = $path . '/css/' . PULLQUOTE_DEFAULT_CSS;
     }
     $node->content['#attached']['css'][] = $css_file;
     $node->content['#attached']['js'][] = $path . '/pullquote.js';
@@ -78,32 +74,16 @@ function pullquote_node_view(array &$build, \Drupal\node\NodeInterface $node, $v
  */
 function pullquote_node_enabled(\Drupal\node\NodeInterface $node, $view_mode) {
   // Fail fast. Don't bother enabling on nodes if we have global scope.
-  // @FIXME
-// Could not extract the default value because it is either indeterminate, or
-// not scalar. You'll need to provide a default value in
-// config/install/pullquote.settings.yml and config/schema/pullquote.schema.yml.
-$pullquote_global_scope = \Drupal::config('pullquote.settings')->get('pullquote_scope') == 1 ? TRUE : FALSE;
+  $pullquote_global_scope = \Drupal::config('pullquote.settings')->get('scope') == 1 ? TRUE : FALSE;
   if ($pullquote_global_scope) {
     return FALSE;
   }
   // Check if we should load on content only.
   else {
-    // @FIXME
-// Could not extract the default value because it is either indeterminate, or
-// not scalar. You'll need to provide a default value in
-// config/install/pullquote.settings.yml and config/schema/pullquote.schema.yml.
-$content_by_type = \Drupal::config('pullquote.settings')->get('pullquote_content_by_type') == 1 ? TRUE : FALSE;
-    // @FIXME
-// Could not extract the default value because it is either indeterminate, or
-// not scalar. You'll need to provide a default value in
-// config/install/pullquote.settings.yml and config/schema/pullquote.schema.yml.
-$load_by_view_mode = \Drupal::config('pullquote.settings')->get('pullquote_load_by_view_mode') == 1 ? TRUE : FALSE;
+    $content_by_type = \Drupal::config('pullquote.settings')->get('content_by_type') == 1 ? TRUE : FALSE;
+    $load_by_view_mode = \Drupal::config('pullquote.settings')->get('load_by_view_mode') == 1 ? TRUE : FALSE;
     //$types
-    // @FIXME
-// Could not extract the default value because it is either indeterminate, or
-// not scalar. You'll need to provide a default value in
-// config/install/pullquote.settings.yml and config/schema/pullquote.schema.yml.
-$view_modes = \Drupal::config('pullquote.settings')->get('pullquote_view_modes');
+    $view_modes = \Drupal::config('pullquote.settings')->get('view_modes');
     if (!$content_by_type) {
       // Check for view modes.
       // Enable if we should load on all view modes.
@@ -118,11 +98,7 @@ $view_modes = \Drupal::config('pullquote.settings')->get('pullquote_view_modes')
     // Otherwise we care about loading on a per content type basis so check this
     // node's type
     else {
-      // @FIXME
-// Could not extract the default value because it is either indeterminate, or
-// not scalar. You'll need to provide a default value in
-// config/install/pullquote.settings.yml and config/schema/pullquote.schema.yml.
-$types = \Drupal::config('pullquote.settings')->get('pullquote_content_types');
+      $types = \Drupal::config('pullquote.settings')->get('content_types');
       // Fail if we care about checking by types and this node doesn't match.
       if (empty($types[$node->type]) || !$types[$node->type]) {
         return FALSE;
