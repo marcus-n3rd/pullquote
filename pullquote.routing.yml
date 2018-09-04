@@ -1,0 +1,14 @@
+pullquote.admin_settings_form:
+  path: /admin/config/content/pullquote
+  defaults:
+    _title: 'Pullquote Global Configuration'
+    _form: \Drupal\pullquote\Form\PullquoteAdminSettingsForm
+  requirements:
+    _permission: 'administer pullquote settings'
+pullquote.admin_styles_form:
+  path: /admin/config/content/pullquote-style
+  defaults:
+    _title: 'Change Pullquote Styles'
+    _form: \Drupal\pullquote\Form\PullquoteAdminStylesForm
+  requirements:
+    _permission: 'change pullquote styles'

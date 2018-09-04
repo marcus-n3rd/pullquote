@@ -1,0 +1,10 @@
+pullquote.settings:
+  type: mapping
+  label: Settings
+  mapping:
+    pullquote_css:
+      type: string
+    pullquote_load_by_view_mode:
+      type: integer
+    pullquote_css_source:
+      type: string

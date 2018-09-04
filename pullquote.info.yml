@@ -1,0 +1,5 @@
+name: Pullquote
+description: 'Creates a pullquote from selected area(s) in text. This is done through JavaScript and duplicates the marked-up text as a seperately CSS formatted quotation.'
+core: 8.x
+package: 'Content Display'
+type: module

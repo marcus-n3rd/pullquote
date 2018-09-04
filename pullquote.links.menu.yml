@@ -1,0 +1,10 @@
+pullquote.admin_settings_form:
+  route_name: pullquote.admin_settings_form
+  title: 'Pullquote Global Configuration'
+  description: 'Configure Pullquote settings'
+  parent: system.admin_config_content
+pullquote.admin_styles_form:
+  route_name: pullquote.admin_styles_form
+  title: 'Change Pullquote Styles'
+  description: 'Change Pullquote Styles'
+  parent: system.admin_config_content
