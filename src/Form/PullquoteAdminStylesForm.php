@@ -139,15 +139,16 @@ class PullquoteAdminStylesForm extends ConfigFormBase {
     }
 
     $attached_settings = [
-      'pullquoteCurrent' => file_create_url(\Drupal::config('pullquote.settings')->get('css')),
-      'pullQuoteModulePath' => '/' . $path . '/css/',
+      'current' => file_create_url(\Drupal::config('pullquote.settings')->get('css')),
+      'modulePath' => '/' . $path . '/css/',
     ];
 
-    $form['#attached']['js'] = [
-      drupal_get_path('module', 'pullquote') . '/js/pullquote.admin.js',
-      [
-        'data' => $attached_settings,
-        'type' => 'setting',
+    $form['#attached'] = [
+      'library' => [
+        'pullquote/admin',
+      ],
+      'drupalSettings' => [
+        'pullquote' => $attached_settings,
       ],
     ];
 
