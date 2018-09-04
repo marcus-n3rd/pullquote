@@ -1,3 +1,8 @@
-pullquote_css: ''
-pullquote_load_by_view_mode: 1
-pullquote_css_source: ''
+css: 'pullquote_style_1.css'
+scope: 0
+content_by_type: 0
+load_by_view_mode: 1
+view_modes:
+  - 'full'
+content_types: []
+css_source: 'selection'

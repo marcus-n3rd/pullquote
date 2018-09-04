@@ -2,9 +2,21 @@ pullquote.settings:
   type: mapping
   label: Settings
   mapping:
-    pullquote_css:
+    css:
       type: string
-    pullquote_load_by_view_mode:
+    scope:
       type: integer
-    pullquote_css_source:
+    content_by_type:
+      type: integer
+    load_by_view_mode:
+      type: integer
+    view_modes:
+      type: sequence
+      sequence:
+        type: string
+    content_types:
+      type: sequence
+      sequence:
+        type: string
+    css_source:
       type: string
