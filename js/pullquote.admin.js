@@ -10,11 +10,11 @@
 
       document.head.appendChild(newCss);
       $('#edit-css-selection').change(function() {
-        $('link#pullquote-sheet').attr('href', path + $(this).val());
+        $('link#pullquote-sheet').attr('href', path + $(this).val() + '.css');
       });
       $('#edit-css-source-selection').click(function() {
         var selection = $('#edit-css-selection').val();
-        $('link#pullquote-sheet').attr('href', path + selection);
+        $('link#pullquote-sheet').attr('href', path + selection + '.css');
       });
     }
   };

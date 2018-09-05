@@ -4,6 +4,8 @@ pullquote.settings:
   mapping:
     css:
       type: string
+    css_lib:
+      type: string
     scope:
       type: integer
     content_by_type:

@@ -45,7 +45,7 @@ class PullquoteAdminStylesForm extends ConfigFormBase {
     $files = file_scan_directory($path . '/css', '/.css$/');
 
     foreach ($files as $file) {
-      $css_files[$file->filename] = str_replace('_', ' ', $file->name);
+      $css_files[str_replace('.css', '', $file->filename)] = str_replace('_', ' ', $file->name);
     }
     natsort($css_files);
     $form = [];
@@ -91,7 +91,7 @@ class PullquoteAdminStylesForm extends ConfigFormBase {
       '#type' => 'select',
       '#title' => t('Pullquote Style'),
       '#options' => $css_files,
-      '#default_value' => \Drupal::config('pullquote.settings')->get('css'),
+      '#default_value' => \Drupal::config('pullquote.settings')->get('css_lib'),
       '#required' => TRUE,
       '#description' => t('Choose from one of the provided style sheets.'),
       '#states' => [
@@ -142,6 +142,10 @@ class PullquoteAdminStylesForm extends ConfigFormBase {
       'current' => file_create_url(\Drupal::config('pullquote.settings')->get('css')),
       'modulePath' => '/' . $path . '/css/',
     ];
+
+    if (\Drupal::config('pullquote.settings')->get('css_source') === 'selection') {
+      $attached_settings['current'] = file_create_url($path . '/css/' . \Drupal::config('pullquote.settings')->get('css_lib') . '.css');
+    }
 
     $form['#attached'] = [
       'library' => [
@@ -201,11 +205,12 @@ class PullquoteAdminStylesForm extends ConfigFormBase {
     $source = $form_state->getValue(['css_source']);
 
     if ($source == 'selection') {
-      $path = drupal_get_path('module', 'pullquote');
-      $css = $path . '/css/' . $form_state->getValue(['css_selection']);
+      $css = '';
+      $lib = $form_state->getValue(['css_selection']);
     }
     elseif ($source == 'path') {
       $css = $form_state->getValue(['css_path']);
+      $lib = 'custom';
     }
     elseif ($source == 'upload') {
       if ($file = $form_state->getValue(['css_upload'])) {
@@ -218,16 +223,24 @@ class PullquoteAdminStylesForm extends ConfigFormBase {
         // Get rid of the temporary file.
         file_delete($file);
         $css = $filename->uri;
+        $lib = 'custom';
       }
     }
     else {
       //set a default.
-      $css = $path . '/css/pullquote_style_1.css';
+      $css = '';
+      $lib = 'pullquote_style_1';
     }
 
     \Drupal::configFactory()->getEditable('pullquote.settings')->set('css', $css)->save();
+    \Drupal::configFactory()->getEditable('pullquote.settings')->set('css_lib', $lib)->save();
     \Drupal::configFactory()->getEditable('pullquote.settings')->set('css_source', $form_state->getValue(['css_source']))->save();
     drupal_set_message(t('The configuration options have been saved.'));
+
+    if ($source == 'path' || $source == 'upload') {
+      drupal_flush_all_caches();
+      drupal_set_message(t('All caches have been flushed'));
+    }
   }
 
 }
