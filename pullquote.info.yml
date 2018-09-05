@@ -3,3 +3,4 @@ description: 'Creates a pullquote from selected area(s) in text. This is done th
 core: 8.x
 package: 'Content Display'
 type: module
+configure: pullquote.admin_settings_form
