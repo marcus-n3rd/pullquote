@@ -28,14 +28,14 @@
       // Add Button.
       editor.ui.addButton( 'pullquote', {
         label: Drupal.t('Make selected text a Pullquote'),
-        icon: this.path + '../wysiwyg/pullquote.gif',
+        icon: this.path + 'pullquote.gif',
         command: 'pullquote'
       });
 
       // Ckeditor version lower then 4 needs to have a icon path.
       if (version < 4) {
-        editor.ui._.items.pullquote.icon = this.path + '../wysiwyg/pullquote.gif';
-        editor.ui._.items.pullquote.args[0].icon = this.path + '../wysiwyg/pullquote.gif';
+        editor.ui._.items.pullquote.icon = this.path + 'pullquote.gif';
+        editor.ui._.items.pullquote.args[0].icon = this.path + 'pullquote.gif';
       }
 
       // Add Command.

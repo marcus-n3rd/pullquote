@@ -37,7 +37,7 @@ class Pullquote extends CKEditorPluginBase {
     return [
       'pullquote' => [
         'label' => t('Pullquote'),
-        'image' => drupal_get_path('module', 'pullquote') . '/plugins/wysiwyg/pullquote.gif',
+        'image' => drupal_get_path('module', 'pullquote') . '/plugins/ckeditor/pullquote.gif',
       ],
     ];
   }
