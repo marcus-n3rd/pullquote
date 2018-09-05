@@ -5,3 +5,113 @@ admin:
   dependencies:
     - core/drupal
     - core/jquery
+
+view:
+  version: VERSION
+  js:
+    pullquote.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+
+view.pullquote_style_1:
+  version: VERSION
+  css:
+    theme:
+      css/pullquote_style_1.css: {}
+
+view.pullquote_style_2:
+  version: VERSION
+  css:
+    theme:
+      css/pullquote_style_2.css: {}
+
+view.pullquote_style_3:
+  version: VERSION
+  css:
+    theme:
+      css/pullquote_style_3.css: {}
+
+view.pullquote_style_4:
+  version: VERSION
+  css:
+    theme:
+      css/pullquote_style_4.css: {}
+
+view.pullquote_style_5:
+  version: VERSION
+  css:
+    theme:
+      css/pullquote_style_5.css: {}
+
+view.pullquote_style_6:
+  version: VERSION
+  css:
+    theme:
+      css/pullquote_style_6.css: {}
+
+view.pullquote_style_7:
+  version: VERSION
+  css:
+    theme:
+      css/pullquote_style_7.css: {}
+
+view.pullquote_style_8:
+  version: VERSION
+  css:
+    theme:
+      css/pullquote_style_8.css: {}
+
+view.pullquote_style_9:
+  version: VERSION
+  css:
+    theme:
+      css/pullquote_style_9.css: {}
+
+view.pullquote_style_10:
+  version: VERSION
+  css:
+    theme:
+      css/pullquote_style_10.css: {}
+
+view.pullquote_style_11:
+  version: VERSION
+  css:
+    theme:
+      css/pullquote_style_11.css: {}
+
+view.pullquote_style_12:
+  version: VERSION
+  css:
+    theme:
+      css/pullquote_style_12.css: {}
+
+view.pullquote_style_13:
+  version: VERSION
+  css:
+    theme:
+      css/pullquote_style_13.css: {}
+
+view.pullquote_style_14:
+  version: VERSION
+  css:
+    theme:
+      css/pullquote_style_14.css: {}
+
+view.pullquote_style_15:
+  version: VERSION
+  css:
+    theme:
+      css/pullquote_style_15.css: {}
+
+view.pullquote_style_16:
+  version: VERSION
+  css:
+    theme:
+      css/pullquote_style_16.css: {}
+
+view.pullquote_style_17:
+  version: VERSION
+  css:
+    theme:
+      css/pullquote_style_17.css: {}

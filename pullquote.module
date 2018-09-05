@@ -26,6 +26,22 @@ define('PULLQUOTE_VIEW_MODE_LOAD_DEFAULT', 1);
 define('PULLQUOTE_DEFAULT_CSS', 'pullquote_style_1.css');
 
 /**
+ * Implements hook_library_info_build().
+ */
+function pullquote_library_info_build() {
+  $libraries = [];
+
+  $libraries['view.custom'] = [
+    'css' => [
+      'theme' => [
+        '/' . \Drupal::config('pullquote.settings')->get('css') => [],
+      ],
+    ],
+  ];
+
+
+  return $libraries;
+}
  * Implements hook_page_alter().
  *
  * Includes a CSS and JS file for pullquote on every page load.
