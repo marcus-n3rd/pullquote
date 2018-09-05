@@ -149,15 +149,3 @@ function pullquote_help($path, $arg) {
   }
   return $output;
 }
-
-/**
- * Implements hook_wysiwyg_include_directory().
- *
- * Allow WYSIWYG integration.
- */
-function pullquote_wysiwyg_include_directory($type) {
-  switch ($type) {
-    case 'plugins':
-      return 'plugins/wysiwyg';
-  }
-}
