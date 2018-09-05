@@ -10,6 +10,7 @@ namespace Drupal\pullquote\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\file\Entity\File;
 
 class PullquoteAdminStylesForm extends ConfigFormBase {
 
@@ -39,7 +40,6 @@ class PullquoteAdminStylesForm extends ConfigFormBase {
   }
 
   public function buildForm(array $form, \Drupal\Core\Form\FormStateInterface $form_state) {
-    $ctools_enabled = TRUE; // \Drupal::moduleHandler()->moduleExists('ctools');
     $path = drupal_get_path('module', 'pullquote');
     $css_files = [];
     $files = file_scan_directory($path . '/css', '/.css$/');
@@ -61,23 +61,12 @@ class PullquoteAdminStylesForm extends ConfigFormBase {
       '#markup' => '<span class="pullquote-content">If we can but prevent the government from wasting the labours of the people, under the pretence of taking care of them, they must become happy.</span>',
     ];
 
-    // We only allow file upload as an option if Ctools is available because it
-    // has CSS filtering tools.
-    $source_options = [];
-    if ($ctools_enabled) {
-      $source_options = [
-        'selection' => 'Pullquote module supplied styles',
-        'path' => 'User supplied path to a stylesheet',
-        'upload' => 'User uploaded stylesheet',
-      ];
-    }
-    else {
-      $source_options = [
-        'selection' => 'Pullquote module supplied styles',
-        'path' => 'User supplied path to a stylesheet',
-      ];
+    $source_options = [
+      'selection' => 'Pullquote module supplied styles',
+      'path' => 'User supplied path to a stylesheet',
+      'upload' => 'User uploaded stylesheet',
+    ];
 
-    }
     $form['css_source'] = [
       '#type' => 'radios',
       '#title' => t('CSS Source'),
@@ -117,26 +106,27 @@ class PullquoteAdminStylesForm extends ConfigFormBase {
       ],
     ];
 
-    if ($ctools_enabled) {
-      $description = t("If you don't have direct file access to the server, use this field to upload your style sheet.");
-      if (\Drupal::config('pullquote.settings')->get('css_source') == 'upload') {
-        $description .= '<br /><strong>' . t('The currently used CSS file is:') . ' ' . \Drupal::config('pullquote.settings')->get('css') . '</strong>';
-      }
-
-      $form['css_upload'] = [
-        '#type' => 'file',
-        '#title' => t('Upload css file'),
-        '#maxlength' => 40,
-        '#description' => $description,
-        '#states' => [
-          'visible' => [
-            ':input[name="css_source"]' => [
-              'value' => 'upload'
-            ]
-          ]
-        ],
-      ];
+    $description = t("If you don't have direct file access to the server, use this field to upload your style sheet.");
+    if (\Drupal::config('pullquote.settings')->get('css_source') == 'upload') {
+      $description .= '<br /><strong>' . t('The currently used CSS file is:') . ' ' . \Drupal::config('pullquote.settings')->get('css') . '</strong>';
     }
+
+    $form['css_upload'] = [
+      '#type' => 'managed_file',
+      '#title' => t('Upload css file'),
+      '#upload_location' => 'public://pullquote',
+      '#upload_validators' => [
+        'file_validate_extensions' => 'css',
+      ],
+      '#description' => $description,
+      '#states' => [
+        'visible' => [
+          ':input[name="css_source"]' => [
+            'value' => 'upload'
+          ]
+        ]
+      ],
+    ];
 
     $attached_settings = [
       'current' => file_create_url(\Drupal::config('pullquote.settings')->get('css')),
@@ -162,37 +152,16 @@ class PullquoteAdminStylesForm extends ConfigFormBase {
 
   public function validateForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state) {
     // Handle file uploads.
-    $validators = [
-      'file_validate_extensions' => [
-        'css'
-      ]
-    ];
-
-    // Check for a new uploaded style sheet.
-    $file = file_save_upload('css_upload', $validators);
-    if (isset($file)) {
-      // File upload was attempted.
-      if ($file) {
-        // Put the temporary file in form_values so we can save it on submit.
-        $form_state->setValue(['css_upload'], $file);
-      }
-      else {
-        // File upload failed.
-        $form_state->setErrorByName('css_upload', t('The css file could not be uploaded.'));
-      }
-    }
-
-    if ($form_state->getValue(['css_source']) == 'upload' && !$file) {
+    if ($form_state->getValue(['css_source']) == 'upload' && !$form_state->getValue(['css_upload', 0])) {
       $form_state->setErrorByName('css_upload', t('You must choose a CSS file to upload.'));
     }
 
     if ($form_state->getValue(['css_source']) == 'path' && !$form_state->getValue(['css_path'])) {
       $form_state->setErrorByName('css_path', t('A valid CSS file path is required.'));
     }
-
-    // If the user provided a path for a css file, make sure it exists at that
-    // path.
-    if ($form_state->getValue(['css_path'])) {
+    elseif ($form_state->getValue(['css_source']) == 'path') {
+      // If the user provied a path for a css file, make sure it exists at that
+      // path.
       $path = _pullquote_settings_validate_path($form_state->getValue(['css_path']));
       if (!$path) {
         $form_state->setErrorByName('css_path', t('The custom css path is invalid.'));
@@ -213,16 +182,11 @@ class PullquoteAdminStylesForm extends ConfigFormBase {
       $lib = 'custom';
     }
     elseif ($source == 'upload') {
-      if ($file = $form_state->getValue(['css_upload'])) {
-        $css_contents = file_get_contents($file->uri);
-        if (\Drupal::moduleHandler()->moduleExists('ctools')) {
-          ctools_include('css');
-          $css_contents = ctools_css_filter($css_contents);
-        }
-        $filename = file_save_data($css_contents, file_default_scheme() . '://' . $file->filename);
-        // Get rid of the temporary file.
-        file_delete($file);
-        $css = $filename->uri;
+      if (($fid = $form_state->getValue(['css_upload', 0]))) {
+        $file = File::load($fid);
+        $file->setPermanent();
+        $file->save();
+        $css = $file->getFileUri();
         $lib = 'custom';
       }
     }
