@@ -49,13 +49,9 @@ function pullquote_library_info_build() {
 function pullquote_page_alter(&$page) {
   // If global scope add the css and js on each load.
   if (\Drupal::config('pullquote.settings')->get('scope') == 1) {
-    $path = drupal_get_path('module', 'pullquote');
-    $css_file = \Drupal::config('pullquote.settings')->get('css');
-    if (!$css_file) {
-      $css_file = $path . '/css/' . PULLQUOTE_DEFAULT_CSS;
-    }
-    $page['content']['#attached']['css'][] = $css_file;
-    $page['content']['#attached']['js'][] = $path . '/pullquote.js';
+    $css_lib = \Drupal::config('pullquote.settings')->get('css_lib');
+    $page['content']['#attached']['library'][] = 'pullquote/view';
+    $page['content']['#attached']['library'][] = 'pullquote/view.' . $css_lib;
   }
 }
 
@@ -64,15 +60,12 @@ function pullquote_page_alter(&$page) {
  *
  * Includes a CSS and JS file on nodes that match the user selected type(s).
  */
-function pullquote_node_view(array &$build, \Drupal\node\NodeInterface $node, $view_mode, $langcode) {
-  if (pullquote_node_enabled($node, $view_mode)) {
-    $path = drupal_get_path('module', 'pullquote');
-    $css_file = \Drupal::config('pullquote.settings')->get('pullquote_css');
-    if (!$css_file) {
-      $css_file = $path . '/css/' . PULLQUOTE_DEFAULT_CSS;
-    }
-    $node->content['#attached']['css'][] = $css_file;
-    $node->content['#attached']['js'][] = $path . '/pullquote.js';
+function pullquote_node_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
+  if (pullquote_node_enabled($entity, $view_mode)) {
+    $css_lib = \Drupal::config('pullquote.settings')->get('css_lib');
+    drupal_set_message('css lib: ' . $css_lib);
+    $build['#attached']['library'][] = 'pullquote/view';
+    $build['#attached']['library'][] = 'pullquote/view.' . $css_lib;
   }
 }
 
