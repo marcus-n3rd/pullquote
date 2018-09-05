@@ -153,31 +153,6 @@ function pullquote_wysiwyg_include_directory($type) {
 }
 
 /**
- * Implements hook_ckeditor_plugin().
- *
- * Allow CKeditor module intergration
- */
-function pullquote_ckeditor_plugin() {
-  return array(
-    'pullquote' => array(
-      // Name of the plugin used to write it
-      'name' => 'pullquote',
-      // Description of plugin - it would appear in plugins managment of profile settings
-      'desc' => t('Support for Pullquote module'),
-      // The full path to the CKEditor plugin directory, with trailing slash.
-      'path' => base_path() . drupal_get_path('module', 'pullquote') . '/plugins/ckeditor/',
-      // Buttons to show up in the toolbar config area.
-      'buttons' => array(
-        'pullquote' => array(
-          'label' => 'Pullquote',
-          'icon' => '../wysiwyg/pullquote.gif',
-        ),
-      ),
-    ),
-  );
-}
-
-/**
  * Implements hook_filter_info().
  */
 function pullquote_filter_info() {
