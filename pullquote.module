@@ -39,9 +39,10 @@ function pullquote_library_info_build() {
     ],
   ];
 
-
   return $libraries;
 }
+
+/**
  * Implements hook_page_alter().
  *
  * Includes a CSS and JS file for pullquote on every page load.
@@ -109,7 +110,7 @@ function pullquote_node_enabled(\Drupal\node\NodeInterface $node, $view_mode) {
     else {
       $types = \Drupal::config('pullquote.settings')->get('content_types');
       // Fail if we care about checking by types and this node doesn't match.
-      if (empty($types[$node->type]) || !$types[$node->type]) {
+      if (empty($types[$node->getType()]) || !$types[$node->getType()]) {
         return FALSE;
       }
       if (!$load_by_view_mode) {
