@@ -112,12 +112,9 @@ class PullquoteAdminStylesForm extends ConfigFormBase {
     }
 
     $form['css_upload'] = [
-      '#type' => 'managed_file',
+      '#type' => 'file',
       '#title' => t('Upload css file'),
-      '#upload_location' => 'public://pullquote',
-      '#upload_validators' => [
-        'file_validate_extensions' => 'css',
-      ],
+      '#maxlength' => 40,
       '#description' => $description,
       '#states' => [
         'visible' => [
@@ -152,7 +149,27 @@ class PullquoteAdminStylesForm extends ConfigFormBase {
 
   public function validateForm(array &$form, \Drupal\Core\Form\FormStateInterface $form_state) {
     // Handle file uploads.
-    if ($form_state->getValue(['css_source']) == 'upload' && !$form_state->getValue(['css_upload', 0])) {
+    $validators = [
+      'file_validate_extensions' => [
+        'css'
+      ]
+    ];
+
+    // Check for a new uploaded style sheet.
+    $file = file_save_upload('css_upload', $validators);
+    if (isset($file)) {
+      // File upload was attempted.
+      if ($file) {
+        // Put the temporary file in form_values so we can save it on submit.
+        $form_state->setValue(['css_upload'], $file);
+      }
+      else {
+        // File upload failed.
+        $form_state->setErrorByName('css_upload', t('The css file could not be uploaded.'));
+      }
+    }
+
+    if ($form_state->getValue(['css_source']) == 'upload' && !$file) {
       $form_state->setErrorByName('css_upload', t('You must choose a CSS file to upload.'));
     }
 
@@ -182,11 +199,14 @@ class PullquoteAdminStylesForm extends ConfigFormBase {
       $lib = 'custom';
     }
     elseif ($source == 'upload') {
-      if (($fid = $form_state->getValue(['css_upload', 0]))) {
-        $file = File::load($fid);
-        $file->setPermanent();
-        $file->save();
-        $css = $file->getFileUri();
+      if (($file = $form_state->getValue(['css_upload', 0]))) {
+        $optimizer = new \Drupal\pullquote\PullquoteCssOptimizer();
+        $css_contents = file_get_contents($file->getFileUri());
+        $css_contents = $optimizer->optimizeContent($css_contents);
+        $filename = file_save_data($css_contents, file_default_scheme() . '://' . $file->getFilename());
+        // Get rid of the temporary file.
+        $file->delete();
+        $css = $filename->getFileUri();
         $lib = 'custom';
       }
     }
